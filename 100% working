@@ -1,0 +1,38 @@
+local function createESPBox(player)
+    local highlight = Instance.new("Highlight")
+    highlight.Adornee = player.Character
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+    highlight.FillColor = player.TeamColor.Color
+    highlight.OutlineColor = player.TeamColor.Color
+    highlight.Parent = player.Character
+end
+
+local function onPlayerAdded(player)
+    player.CharacterAdded:Connect(function()
+        wait(1)
+        createESPBox(player)
+    end)
+end
+
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player.Character then
+        createESPBox(player)
+    end
+    player.CharacterAdded:Connect(function()
+        wait(1)
+        createESPBox(player)
+    end)
+end
+
+game.Players.PlayerAdded:Connect(onPlayerAdded)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    if player.Character then
+        for _, v in pairs(player.Character:GetChildren()) do
+            if v:IsA("Highlight") then
+                v:Destroy()
+            end
+        end
+    end
+end)
